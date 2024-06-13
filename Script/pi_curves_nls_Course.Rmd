@@ -1,0 +1,144 @@
+---
+title: "pi_curves_nls"
+author: "Ariana S Huffmyer"
+date: "3/18/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r load_packages}
+#Read in required libraries
+library("devtools")
+library("ggplot2")
+library("segmented")
+library("plotrix")
+library("gridExtra")
+library("lubridate")
+library("chron")
+library("plyr")
+library("dplyr")
+library("tidyr")
+library("tidyverse")
+library("broom")
+library("ggpubr")
+library("minpack.lm")
+library("ggpmisc")
+
+```
+
+
+PLATE1
+# Import data
+```{r import_data}
+Data <-read.csv("/Users/talimass/Library/Mobile Documents/com~apple~CloudDocs/Documents/Documents - MacBook Pro/GitHub/Reserch-Methods/Data/ROI_Padina_light dark.csv", header=T, sep=";", na.string="NA") #reads in the data files
+Data <- Data[, c("Date", "Time", "PAR", "ETR1","ETR2","ETR3","ETR4","ETR5","ETR6","ETR7","ETR8","ETR9")]
+# change format from wide to long
+Data <- Data %>%  pivot_longer(., cols = starts_with("ETR"), names_to = "sample.ID")
+Data$value <- na_if(Data$value, 0)
+#need to Remove all data at PAR values above where ETR hits zero
+Data$PAR <- as.numeric(Data$PAR)
+colnames(Data)[5] ="ETR"
+
+```
+
+
+# View Data plots
+```{r}
+#Data <- Data %>%
+#  subset(ETR<40)
+
+Data %>%
+ggplot(aes(x=PAR, y=ETR, color=sample.ID))+
+  geom_point()+
+  geom_line()+
+  facet_wrap("sample.ID")+
+  theme_bw()
+  
+#Data <- Data %>%
+ #filter(!sample.ID=="ETR2"& !sample.ID=="ETR6")
+
+Data %>%
+ggplot(aes(x=PAR, y=ETR, color=sample.ID))+
+  geom_point()+
+  geom_line()+
+  facet_wrap("sample.ID")+
+  theme_bw()
+
+```
+
+```{r}
+set.seed(123)
+Data.PI <- Data %>% subset(PAR<650) 
+curve.nlsPIC <- Data.PI %>% nls(ETR ~ (Am*((AQY*PAR)/(sqrt(Am^2 + (AQY*PAR)^2)))-Rd), data=., start=list(Am=0.7,  AQY=0.001, Rd=.4))
+coef(curve.nlsPIC)
+plot(ETR ~ PAR, data = Data.PI)
+lines(0:900,
+      predict(curve.nlsPIC,
+              newdata = data.frame(PAR = 0:900)))
+```
+# Define PI curve function as a nonlinear Least Squares regression of a quadratic fit, test nls fit
+Aquatic Photosynthesis, Falkowski   
+Pmax = max photosynthesis (AKA Am from Bayesian script)  
+alpha = quantum yeild (AKA AQY from Bayesian script)  
+I/E = irradiance (AKA PAR from Bayesian script)  
+Rd = dark respiration   
+
+Using fixed initial values (keeping for reference):  
+```{r}
+
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR13"))
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR16"))
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR19"))
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR2"))
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR7"))
+# Data.PI <- Data.PI %>% subset(Spat.ID!=("ETR1"))
+
+nls_data1 <- Data.PI %>%
+group_by(sample.ID) %>%
+nest(-sample.ID) %>%
+mutate(model1 = map(data, ~
+nls(ETR ~ (Am*((AQY*PAR)/(sqrt(Am^2 + (AQY*PAR)^2)))-Rd), data=., start=list(Am=0.7,  AQY=0.001, Rd=.4)) %>%
+tidy %>%
+dplyr::select(term, estimate) %>%
+spread(term, estimate))) %>%
+unnest(model1) %>%
+mutate(Ik = Am/AQY)%>%
+mutate(Date = "20240523") %>%
+mutate(Plate = "Plate1") %>%
+mutate(sample.ID.PAM = paste0(Date,"_",Plate,"_",sample.ID)) 
+write_csv(nls_data1, "/Users/talimass/Library/Mobile Documents/com~apple~CloudDocs/Documents/Documents - MacBook Pro/GitHub/Reserch-Methods/Output/course_pi_curve_pars_NLS_fixedparms.csv")
+```
+
+Plot curve over data points.  
+```{r}
+augmented <- Data.PI %>%
+  filter(PAR <650) %>%
+  nest(-sample.ID) %>% 
+  mutate(
+    fit = map(data, ~ nls(ETR ~ (Am*((AQY*PAR)/(sqrt(Am^2 + (AQY*PAR)^2)))-Rd), data=., start=list(Am=0.7,  AQY=0.001, Rd=.4))),
+    augmented = map(fit, augment),
+  ) %>% 
+  unnest(augmented)
+
+augmented$ID <-augmented$sample.ID
+Aug <- augmented %>% separate(ID, c("Sp", "Num", "Type"))
+
+#all colonies together
+pdf("/Users/talimass/Library/Mobile Documents/com~apple~CloudDocs/Documents/Documents - MacBook Pro/GitHub/Reserch-Methods/Output/Plate1_PI_Curve_Fit_Plots.pdf")
+PI.curves <- Aug %>%
+ggplot(aes(x=PAR, y=ETR, color=sample.ID))+
+  geom_point() + 
+  geom_line(aes(y=.fitted, x=PAR,group=sample.ID))+
+  theme_classic()+
+          labs(x = expression(paste('PAR (', mu, "mol photons m"^-2, 's'^-1,")")),
+               y = expression(paste("ETR")))+
+  theme(legend.position = "top")
+PI.curves
+dev.off()
+
+```
