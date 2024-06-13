@@ -34,7 +34,7 @@
 14. Examine the quality and quantity of the DNA using Nano Drop. 
 15. **Keep DNA at -20 °C**. 
 
-![alt text](/Users/hadarwinckler/Documents/GitHub/ResearchMethodsHA/photos/DNA-extraction-PCI.001.jpg)
+![DNA-extraction-PCI.001.jpg](/Users/hadarwinckler/Documents/GitHub/ResearchMethodsHA/photos/DNA-extraction-PCI.001.jpg)  
 
 *Figure 1: The phases in the eppendorf after centrifuge.* 
 
