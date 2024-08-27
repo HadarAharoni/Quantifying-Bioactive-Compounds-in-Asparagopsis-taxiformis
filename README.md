@@ -29,10 +29,10 @@ _____________
 #### 1. Gather Sequence Data
 - Obtain the target sequence for *Asparagopsis taxiformis* from a reliable database like NCBI GenBank.
 
-![step](images/step1.jpeg)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/step1.jpeg)
 
 #### 2. ClustalW
-![step](images/step2.png)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/step2.png)
 
 
 #### 3. Choose Primer Design Tool
@@ -50,7 +50,7 @@ _____________
 #### 5. Generate Primers
 - Run the tool to generate primer pairs.
 - Review for self-dimers, hairpins, and cross-dimers.
-![step](images/final.png)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/final.png)
 
 ### Short Protocol for Creating a Phylogenetic Tree in MEGA11
 
@@ -70,7 +70,7 @@ _____________
    - **Substitution Model:** normal
 3. Click `OK`.
 
-![step](images/tree.jpeg)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/tree.jpeg)
 __________
 
 
@@ -158,7 +158,7 @@ ______
 
 ### MS (GNPS): 
 
-![GNPS](F03671F6-C684-4C67-8295-0A1A1FE2F50F_1_105_c.jpeg)
+![GNPS](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/F03671F6-C684-4C67-8295-0A1A1FE2F50F_1_105_c.jpeg)
 
 
 
