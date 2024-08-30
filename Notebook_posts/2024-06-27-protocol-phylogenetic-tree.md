@@ -16,4 +16,4 @@
    - **Substitution Model:** normal
 3. Click `OK`.
 
-![step](images/tree.jpeg)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/tree.jpeg)

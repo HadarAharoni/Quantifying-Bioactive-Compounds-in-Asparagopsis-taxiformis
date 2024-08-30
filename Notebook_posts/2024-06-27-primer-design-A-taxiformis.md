@@ -3,10 +3,10 @@
 #### 1. Gather Sequence Data
 - Obtain the target sequence for *Asparagopsis taxiformis* from a reliable database like NCBI GenBank.
 
-![step](images/step1.jpeg)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/step1.jpeg)
 
 #### 2. ClustalW
-![step](images/step2.png)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/step2.png)
 
 
 #### 3. Choose Primer Design Tool
@@ -24,6 +24,6 @@
 #### 5. Generate Primers
 - Run the tool to generate primer pairs.
 - Review for self-dimers, hairpins, and cross-dimers.
-![step](images/final.png)
+![step](https://github.com/HadarAharoni/Quantifying-Bioactive-Compounds-in-Asparagopsis-taxiformis/blob/main/photos/final.png)
 
 
